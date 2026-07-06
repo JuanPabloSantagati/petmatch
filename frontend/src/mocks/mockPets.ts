@@ -1,0 +1,40 @@
+import type { Pet } from "../types/pet";
+
+export const mockPets: Pet[] = [
+  {
+    id: "1",
+    name: "Rocky",
+    species: "Perro",
+    breed: "Golden Retriever",
+    city: "Rosario",
+    image: "https://placedog.net/500?id=1",
+    status: "LOST",
+    state: "OPEN",
+    description: "Muy amigable, llevaba collar azul.",
+    publishedAt: "Hace 2 días",
+  },
+  {
+    id: "2",
+    name: "Mishi",
+    species: "Gato",
+    breed: "Mestizo",
+    city: "Rosario",
+    image: "https://placecats.com/500/300",
+    status: "FOUND",
+    state: "OPEN",
+    description: "Encontrado cerca del parque.",
+    publishedAt: "Hace 5 horas",
+  },
+  {
+    id: "3",
+    name: "Luna",
+    species: "Perro",
+    breed: "Border Collie",
+    city: "Córdoba",
+    image: "https://placedog.net/500?id=3",
+    status: "LOST",
+    state: "OPEN",
+    description: "Muy juguetona.",
+    publishedAt: "Hace 1 día",
+  },
+];
