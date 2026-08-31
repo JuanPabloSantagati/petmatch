@@ -29,7 +29,7 @@ export default function HowItWorks() {
         ¿Cómo funciona?
       </h2>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-8 md:grid-cols-3">
         {steps.map((step) => (
           <StepCard
             key={step.id}

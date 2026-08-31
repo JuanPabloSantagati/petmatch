@@ -6,7 +6,7 @@ export default function MainLayout() {
     <div className="min-h-screen bg-slate-50">
       <Header />
 
-      <main className="mx-auto max-w-7xl px-6 py-8">
+      <main className="mx-auto max-w-7xl px-6 py-12">
         <Outlet />
       </main>
     </div>
