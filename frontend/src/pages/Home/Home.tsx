@@ -1,44 +1,42 @@
-import { Search } from "lucide-react";
-import { Button, Card, Input } from "../../components/ui";
-import PetCard from "../../components/common/PetCard";
-import { mockPets } from "../../mocks/mockPets";
+import { useQuery } from "@tanstack/react-query";
+
+import Stats from "../../components/home/Stats";
+import PetList from "../../components/home/PetList";
+import Hero from "../../components/home/Hero";
+import HowItWorks from "../../components/home/HowItWorks";
+import { getPets } from "../../services/petService";
 
 export default function Home() {
+  const {
+    data: pets,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["pets"],
+    queryFn: getPets,
+  });
+
   return (
     <div className="space-y-12">
-      <section className="rounded-3xl bg-orange-500 px-8 py-20 text-center text-white">
-        <h1 className="mb-6 text-5xl font-bold">
-          Encontrá a tu mejor amigo
-        </h1>
+      <Hero />
 
-        <p className="mx-auto mb-8 max-w-2xl text-lg">
-          Publicá mascotas perdidas o encontradas y ayudá a reunir familias.
+      <Stats />
+
+      {isLoading && (
+        <p className="text-center text-gray-500">
+          Cargando publicaciones...
         </p>
+      )}
 
-        <div className="mx-auto flex max-w-xl gap-3">
-          <Input
-            placeholder="Buscar por ciudad, nombre o raza..."
-          />
+      {isError && (
+        <p className="text-center text-red-500">
+          No pudimos cargar las publicaciones. Intentá de nuevo más tarde.
+        </p>
+      )}
 
-          <Button>
-            <Search size={20} />
-          </Button>
-        </div>
-      </section>
+      {pets && <PetList pets={pets} />}
 
-      <section>
-        <h2 className="mb-6 text-3xl font-bold">
-          Publicaciones recientes
-        </h2>
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {mockPets.map((pet) => (
-              <PetCard key={pet.id} pet={pet} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <HowItWorks />
     </div>
   );
 }

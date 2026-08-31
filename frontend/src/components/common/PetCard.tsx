@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 import type { Pet } from "../../types/pet";
 import { Badge, Card, Button } from "../ui";
+import { formatRelativeTime } from "../../utils/formatRelativeTime";
 
 interface Props {
   pet: Pet;
@@ -33,7 +34,7 @@ export default function PetCard({ pet }: Props) {
       </div>
 
       <p className="mt-4 text-sm text-gray-500">
-        {pet.publishedAt}
+        {formatRelativeTime(pet.createdAt)}
       </p>
 
       <Button className="mt-5 w-full">
