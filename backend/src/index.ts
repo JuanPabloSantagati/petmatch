@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 
 import petsRouter from "./routes/pets.routes.js";
+import authRouter from "./routes/auth.routes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
@@ -15,6 +16,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/pets", petsRouter);
+app.use("/api/auth", authRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ error: "Recurso no encontrado" });
