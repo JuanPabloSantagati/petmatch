@@ -1,11 +1,16 @@
-import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { getPetById } from "../../services/petService";
+import { getPetById, deletePet } from "../../services/petService";
 import { formatRelativeTime } from "../../utils/formatRelativeTime";
+import { useAuth } from "../../context/AuthContext";
+import { Button } from "../../components/ui";
 
 export default function PetDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const {
     data: pet,
@@ -17,37 +22,40 @@ export default function PetDetail() {
     enabled: Boolean(id),
   });
 
+  const { mutate: removePet, isPending: isDeleting } = useMutation({
+    mutationFn: () => deletePet(id!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pets"] });
+      navigate("/");
+    },
+  });
+
+  function handleDelete() {
+    if (confirm("¿Eliminar esta publicación? Esta acción no se puede deshacer.")) {
+      removePet();
+    }
+  }
+
   if (isLoading) {
-    return (
-      <p className="py-20 text-center text-gray-500">
-        Cargando...
-      </p>
-    );
+    return <p className="py-20 text-center text-gray-500">Cargando...</p>;
   }
 
   if (isError || !pet) {
     return (
       <div className="py-20 text-center">
-        <h1 className="mb-4 text-3xl font-bold">
-          Mascota no encontrada
-        </h1>
-
-        <Link
-          to="/"
-          className="text-brand-500 hover:underline"
-        >
+        <h1 className="mb-4 text-3xl font-bold">Mascota no encontrada</h1>
+        <Link to="/" className="text-brand-500 hover:underline">
           Volver al inicio
         </Link>
       </div>
     );
   }
 
+  const isOwner = user?.id === pet.ownerId;
+
   return (
     <div className="mx-auto max-w-3xl">
-      <Link
-        to="/"
-        className="mb-6 inline-block text-brand-500 hover:underline"
-      >
+      <Link to="/" className="mb-6 inline-block text-brand-500 hover:underline">
         ← Volver
       </Link>
 
@@ -58,36 +66,44 @@ export default function PetDetail() {
           className="mb-6 h-64 w-full rounded-lg object-cover"
         />
 
-        <h1 className="mb-2 text-4xl font-bold">
-          {pet.name}
-        </h1>
+        <div className="mb-2 flex items-center justify-between">
+          <h1 className="text-4xl font-bold">{pet.name}</h1>
 
-        <p className="mb-6 text-gray-500">
-          {pet.breed}
-        </p>
+          {isOwner && (
+            <div className="flex gap-2">
+              <Link to={`/pets/${pet.id}/editar`}>
+                <Button variant="secondary">Editar</Button>
+              </Link>
+              <Button
+                variant="secondary"
+                className="border-red-200 text-red-600 hover:bg-red-50"
+                onClick={handleDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? "Eliminando..." : "Eliminar"}
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <p className="mb-6 text-gray-500">{pet.breed}</p>
 
         <div className="space-y-3">
           <p>
             <strong>Especie:</strong> {pet.species}
           </p>
-
           <p>
             <strong>Ciudad:</strong> {pet.city}
           </p>
-
           <p>
             <strong>Descripción:</strong> {pet.description}
           </p>
-
           <p>
-            <strong>Estado:</strong>{" "}
-            {pet.status === "LOST" ? "Perdido" : "Encontrado"}
+            <strong>Estado:</strong> {pet.status === "LOST" ? "Perdido" : "Encontrado"}
           </p>
-
           <p>
             <strong>Contacto:</strong> {pet.contactPhone}
           </p>
-
           <p className="text-sm text-gray-400">
             Publicado {formatRelativeTime(pet.createdAt)}
           </p>

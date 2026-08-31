@@ -13,4 +13,5 @@ export interface Pet {
   description: string;
   contactPhone: string;
   createdAt: string;
+  ownerId: string | null;
 }
