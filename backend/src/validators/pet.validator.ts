@@ -12,3 +12,7 @@ export const createPetSchema = z.object({
 });
 
 export type CreatePetInput = z.infer<typeof createPetSchema>;
+
+export const updatePetSchema = createPetSchema.partial();
+
+export type UpdatePetInput = z.infer<typeof updatePetSchema>;
