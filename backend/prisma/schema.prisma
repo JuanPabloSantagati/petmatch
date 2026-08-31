@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PetStatus {
+  LOST
+  FOUND
+}
+
+enum PetState {
+  OPEN
+  RESOLVED
+}
+
+model Pet {
+  id           String    @id @default(uuid())
+  name         String
+  species      String
+  breed        String
+  city         String
+  image        String
+  status       PetStatus
+  state        PetState  @default(OPEN)
+  description  String
+  contactPhone String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
