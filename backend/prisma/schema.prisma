@@ -17,6 +17,15 @@ enum PetState {
   RESOLVED
 }
 
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  pets         Pet[]
+}
+
 model Pet {
   id           String    @id @default(uuid())
   name         String
@@ -30,4 +39,6 @@ model Pet {
   contactPhone String
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+  ownerId      String?
+  owner        User?     @relation(fields: [ownerId], references: [id])
 }
