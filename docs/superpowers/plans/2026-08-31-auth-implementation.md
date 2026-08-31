@@ -79,13 +79,15 @@ JWT_SECRET="change-me-to-a-long-random-string"
 ```
 Add the same line (with a real random value) to your local `backend/.env` — it is gitignored, so this step only touches the example file in git.
 
-- [ ] **Step 4: Run the migration**
+- [ ] **Step 4: Push the schema**
+
+This project has no `prisma/migrations` folder — its tables were created with `prisma db push`, not `migrate dev` (confirmed by `ls backend/prisma/migrations` returning "No such file or directory" against the running dev database). Running `migrate dev` against an untracked schema would try to create an initial migration and can prompt to reset the database. Follow the project's existing convention instead:
 
 ```bash
 cd backend
-npx prisma migrate dev --name add_users_and_ownership
+npx prisma db push
 ```
-Expected: migration applies cleanly (existing seeded pets get `ownerId = NULL`), `npx prisma generate` runs automatically as part of `migrate dev`.
+Expected: `Your database is now in sync with your Prisma schema`, followed by an automatic `prisma generate` run. Existing seeded pets keep their data with `ownerId = NULL`.
 
 - [ ] **Step 5: Verify**
 
