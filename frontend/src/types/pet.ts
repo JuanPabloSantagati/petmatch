@@ -11,5 +11,6 @@ export interface Pet {
   status: PetStatus;
   state: PetState;
   description: string;
-  publishedAt: string;
+  contactPhone: string;
+  createdAt: string;
 }
