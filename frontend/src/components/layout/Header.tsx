@@ -7,7 +7,7 @@ export default function Header() {
 
         <Link
           to="/"
-          className="text-2xl font-bold text-orange-500"
+          className="text-2xl font-bold text-brand-500"
         >
           🐾 PetMatch
         </Link>
@@ -22,7 +22,7 @@ export default function Header() {
 
           <Link
             to="/register"
-            className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
+            className="rounded-lg bg-brand-500 px-4 py-2 text-white hover:bg-brand-600"
           >
             Registrarse
           </Link>

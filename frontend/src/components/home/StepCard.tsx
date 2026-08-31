@@ -14,7 +14,7 @@ export default function StepCard({
 }: StepCardProps) {
   return (
     <Card>
-      <div className="mb-4 text-orange-500">
+      <div className="mb-4 text-brand-500">
         {icon}
       </div>
 

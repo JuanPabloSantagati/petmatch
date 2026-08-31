@@ -6,7 +6,7 @@ interface Props {
 
 export default function Card({ children }: Props) {
   return (
-    <div className="rounded-xl border bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-md">
       {children}
     </div>
   );

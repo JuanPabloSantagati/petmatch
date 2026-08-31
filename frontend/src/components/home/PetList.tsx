@@ -8,8 +8,8 @@ interface Props {
 
 export default function PetList({ pets }: Props) {
   return (
-    <section>
-      <h2 className="mb-6 text-3xl font-bold">
+    <section id="publicaciones" className="scroll-mt-24">
+      <h2 className="mb-6 text-3xl font-bold text-gray-800">
         Publicaciones recientes
       </h2>
 
@@ -18,6 +18,7 @@ export default function PetList({ pets }: Props) {
           <Link
             key={pet.id}
             to={`/pets/${pet.id}`}
+            className="block transition hover:-translate-y-1"
           >
             <PetCard pet={pet} />
           </Link>

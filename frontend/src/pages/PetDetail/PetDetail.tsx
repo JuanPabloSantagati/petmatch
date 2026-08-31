@@ -34,7 +34,7 @@ export default function PetDetail() {
 
         <Link
           to="/"
-          className="text-orange-500 hover:underline"
+          className="text-brand-500 hover:underline"
         >
           Volver al inicio
         </Link>
@@ -46,7 +46,7 @@ export default function PetDetail() {
     <div className="mx-auto max-w-3xl">
       <Link
         to="/"
-        className="mb-6 inline-block text-orange-500 hover:underline"
+        className="mb-6 inline-block text-brand-500 hover:underline"
       >
         ← Volver
       </Link>

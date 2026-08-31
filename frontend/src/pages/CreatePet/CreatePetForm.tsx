@@ -133,7 +133,7 @@ export default function CreatePetForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="rounded bg-orange-500 px-4 py-2 text-white disabled:opacity-50"
+        className="rounded bg-brand-500 px-4 py-2 text-white disabled:opacity-50"
       >
         {isPending ? "Publicando..." : "Publicar"}
       </button>
