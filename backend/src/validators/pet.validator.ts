@@ -13,6 +13,13 @@ export const createPetSchema = z.object({
 
 export type CreatePetInput = z.infer<typeof createPetSchema>;
 
-export const updatePetSchema = createPetSchema.partial();
+// NOTE: intentionally not `createPetSchema.partial()`. In Zod 4, `.partial()` does not
+// strip an inner `.default()` — an absent `breed` would parse to "Sin especificar" instead
+// of "leave unchanged", silently wiping the field on every partial update. If `createPetSchema`
+// ever gains another field with `.default()`, apply the same `.omit()`/`.extend()` treatment here.
+export const updatePetSchema = createPetSchema
+  .omit({ breed: true })
+  .partial()
+  .extend({ breed: z.string().min(1).optional() });
 
 export type UpdatePetInput = z.infer<typeof updatePetSchema>;

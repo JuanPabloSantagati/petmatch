@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
@@ -16,6 +17,7 @@ interface Props {
 export default function EditPetForm({ pet }: Props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [formError, setFormError] = useState<string | null>(null);
 
   const {
     register,
@@ -26,6 +28,7 @@ export default function EditPetForm({ pet }: Props) {
     defaultValues: {
       name: pet.name,
       species: pet.species,
+      breed: pet.breed,
       city: pet.city,
       contactPhone: pet.contactPhone,
       status: pet.status,
@@ -34,10 +37,16 @@ export default function EditPetForm({ pet }: Props) {
   });
 
   async function onSubmit(data: EditPetFormData) {
-    await updatePet(pet.id, data);
-    queryClient.invalidateQueries({ queryKey: ["pets"] });
-    queryClient.invalidateQueries({ queryKey: ["pet", pet.id] });
-    navigate(`/pets/${pet.id}`);
+    setFormError(null);
+
+    try {
+      await updatePet(pet.id, data);
+      queryClient.invalidateQueries({ queryKey: ["pets"] });
+      queryClient.invalidateQueries({ queryKey: ["pet", pet.id] });
+      navigate(`/pets/${pet.id}`);
+    } catch {
+      setFormError("No pudimos guardar los cambios. Intentá de nuevo.");
+    }
   }
 
   return (
@@ -48,6 +57,10 @@ export default function EditPetForm({ pet }: Props) {
 
       <FormField label="Especie" error={errors.species?.message}>
         <Input {...register("species")} />
+      </FormField>
+
+      <FormField label="Raza" error={errors.breed?.message}>
+        <Input {...register("breed")} />
       </FormField>
 
       <FormField label="Ciudad" error={errors.city?.message}>
@@ -71,6 +84,8 @@ export default function EditPetForm({ pet }: Props) {
           className="w-full rounded-lg border px-4 py-3"
         />
       </FormField>
+
+      {formError && <p className="mb-4 text-sm text-red-500">{formError}</p>}
 
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Guardando..." : "Guardar cambios"}

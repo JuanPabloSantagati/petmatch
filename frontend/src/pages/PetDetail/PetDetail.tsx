@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -11,6 +12,7 @@ export default function PetDetail() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const {
     data: pet,
@@ -28,9 +30,14 @@ export default function PetDetail() {
       queryClient.invalidateQueries({ queryKey: ["pets"] });
       navigate("/");
     },
+    onError: () => {
+      setDeleteError("No pudimos eliminar la publicación. Intentá de nuevo.");
+    },
   });
 
   function handleDelete() {
+    setDeleteError(null);
+
     if (confirm("¿Eliminar esta publicación? Esta acción no se puede deshacer.")) {
       removePet();
     }
@@ -85,6 +92,10 @@ export default function PetDetail() {
             </div>
           )}
         </div>
+
+        {deleteError && (
+          <p className="mb-4 text-sm text-red-500">{deleteError}</p>
+        )}
 
         <p className="mb-6 text-gray-500">{pet.breed}</p>
 

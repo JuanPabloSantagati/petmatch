@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
+const envSecret = process.env.JWT_SECRET;
+if (!envSecret) {
+  throw new Error("JWT_SECRET no está definido en el entorno");
+}
+const JWT_SECRET: string = envSecret;
 
 export interface TokenPayload {
   sub: string;
