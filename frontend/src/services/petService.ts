@@ -4,6 +4,7 @@ import type { Pet, PetStatus } from "../types/pet";
 export interface CreatePetInput {
   name: string;
   species: string;
+  breed?: string;
   city: string;
   contactPhone: string;
   status: PetStatus;

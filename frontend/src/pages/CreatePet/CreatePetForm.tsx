@@ -42,6 +42,7 @@ export default function CreatePetForm() {
     mutate({
       name: data.name,
       species: SPECIES_LABEL[data.type],
+      breed: data.breed?.trim() ? data.breed.trim() : undefined,
       city: data.city,
       contactPhone: data.phone,
       status: data.status,
@@ -92,6 +93,16 @@ export default function CreatePetForm() {
           <option value="LOST">Perdido</option>
           <option value="FOUND">Encontrado</option>
         </select>
+      </FormField>
+
+      <FormField
+        label="Raza (opcional)"
+        error={errors.breed?.message}
+      >
+        <input
+          {...register("breed")}
+          className="w-full rounded border p-2"
+        />
       </FormField>
 
       <FormField

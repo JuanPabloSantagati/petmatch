@@ -7,6 +7,9 @@ export const createPetSchema = z.object({
   city: z
     .string()
     .min(2, "La ciudad es obligatoria"),
+  breed: z
+    .string()
+    .optional(),
   phone: z
   .string()
   .min(8, "Ingresá un teléfono válido"),

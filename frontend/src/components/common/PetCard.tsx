@@ -1,13 +1,52 @@
+import { useState, type MouseEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MapPin } from "lucide-react";
+
 import type { Pet } from "../../types/pet";
 import { Badge, Card, Button } from "../ui";
 import { formatRelativeTime } from "../../utils/formatRelativeTime";
+import { useAuth } from "../../context/AuthContext";
+import { deletePet } from "../../services/petService";
 
 interface Props {
   pet: Pet;
 }
 
 export default function PetCard({ pet }: Props) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const { mutate: removePet, isPending: isDeleting } = useMutation({
+    mutationFn: () => deletePet(pet.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pets"] });
+    },
+    onError: () => {
+      setDeleteError("No pudimos eliminar la publicación. Intentá de nuevo.");
+    },
+  });
+
+  const isOwner = user?.id === pet.ownerId;
+
+  function handleEdit(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    navigate(`/pets/${pet.id}/editar`);
+  }
+
+  function handleDelete(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    setDeleteError(null);
+
+    if (confirm("¿Eliminar esta publicación? Esta acción no se puede deshacer.")) {
+      removePet();
+    }
+  }
+
   return (
     <Card>
       <img
@@ -37,9 +76,27 @@ export default function PetCard({ pet }: Props) {
         {formatRelativeTime(pet.createdAt)}
       </p>
 
-      <Button className="mt-5 w-full">
-        Ver detalle
-      </Button>
+      {deleteError && (
+        <p className="mt-2 text-sm text-red-500">{deleteError}</p>
+      )}
+
+      {isOwner ? (
+        <div className="mt-5 flex gap-2">
+          <Button variant="secondary" className="flex-1" onClick={handleEdit}>
+            Editar
+          </Button>
+          <Button
+            variant="secondary"
+            className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Eliminando..." : "Eliminar"}
+          </Button>
+        </div>
+      ) : (
+        <Button className="mt-5 w-full">Ver detalle</Button>
+      )}
     </Card>
   );
 }
